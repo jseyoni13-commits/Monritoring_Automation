@@ -1,0 +1,7 @@
+_sourcecategory=prod/webapp 
+| json field= _raw "path", "responsetime_time_ms", "instance_id" 
+| where path = "/api/data" and response_time_ms > 3000 
+| timeslice 10m
+| count as slow_request_count by _timeslice, instance_id
+| where slow_request_count > 5
+| fields _timeslice, instance_id, slow_request_count
